@@ -1,0 +1,53 @@
+diff --git a/node_modules/@vanilla-extract/vite-plugin/dist/vanilla-extract-vite-plugin.cjs.prod.js b/node_modules/@vanilla-extract/vite-plugin/dist/vanilla-extract-vite-plugin.cjs.prod.js
+index 396b939..ad21991 100644
+--- a/node_modules/@vanilla-extract/vite-plugin/dist/vanilla-extract-vite-plugin.cjs.prod.js
++++ b/node_modules/@vanilla-extract/vite-plugin/dist/vanilla-extract-vite-plugin.cjs.prod.js
+@@ -91,26 +91,28 @@ function vanillaExtractPlugin({
+           mode: config.mode,
+           isSsrBuild: configEnv.isSsrBuild
+         }, config.configFile);
+-        compiler = integration.createCompiler({
+-          root: config.root,
+-          identifiers: getIdentOption(),
+-          cssImportSpecifier: fileIdToVirtualId,
+-          viteConfig: {
+-            ...(configFile === null || configFile === void 0 ? void 0 : configFile.config),
+-            plugins: configFile === null || configFile === void 0 || (_configFile$config$pl = configFile.config.plugins) === null || _configFile$config$pl === void 0 ? void 0 : _configFile$config$pl.flat().filter(plugin => typeof plugin === 'object' && plugin !== null && 'name' in plugin &&
+-            // Prevent an infinite loop where the compiler creates a new instance of the plugin,
+-            // which creates a new compiler, which creates a new instance of the plugin, etc.
+-            plugin.name !== 'vanilla-extract' &&
+-            // Skip Remix because it throws an error if it's not loaded with a config file.
+-            // If it _is_ loaded with a config file, it will create an infinite loop because it
+-            // also has a child compiler which uses the same mechanism to load the config file.
+-            // https://github.com/remix-run/remix/pull/7990#issuecomment-1809356626
+-            // Additionally, some internal Remix plugins rely on a `ctx` object to be initialized by
+-            // the main Remix plugin, and may not function correctly without it. To address this, we
+-            // filter out all Remix-related plugins.
+-            !plugin.name.startsWith('remix'))
+-          }
+-        });
++        if (compiler === undefined) {
++          compiler = integration.createCompiler({
++            root: config.root,
++            identifiers: getIdentOption(),
++            cssImportSpecifier: fileIdToVirtualId,
++            viteConfig: {
++              ...(configFile === null || configFile === void 0 ? void 0 : configFile.config),
++              plugins: configFile === null || configFile === void 0 || (_configFile$config$pl = configFile.config.plugins) === null || _configFile$config$pl === void 0 ? void 0 : _configFile$config$pl.flat().filter(plugin => typeof plugin === 'object' && plugin !== null && 'name' in plugin &&
++              // Prevent an infinite loop where the compiler creates a new instance of the plugin,
++              // which creates a new compiler, which creates a new instance of the plugin, etc.
++              plugin.name !== 'vanilla-extract' &&
++              // Skip Remix because it throws an error if it's not loaded with a config file.
++              // If it _is_ loaded with a config file, it will create an infinite loop because it
++              // also has a child compiler which uses the same mechanism to load the config file.
++              // https://github.com/remix-run/remix/pull/7990#issuecomment-1809356626
++              // Additionally, some internal Remix plugins rely on a `ctx` object to be initialized by
++              // the main Remix plugin, and may not function correctly without it. To address this, we
++              // filter out all Remix-related plugins.
++              !plugin.name.startsWith('remix'))
++            }
++          });
++        }
+       }
+     },
+     buildEnd() {
